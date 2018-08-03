@@ -26,7 +26,7 @@ namespace DodoTdd.Test
             var game = new Game();
             player.Join(game);
 
-            player.Leave(game);
+            player.LeaveGame();
 
             Assert.IsFalse(player.InGame);
         }
@@ -35,9 +35,8 @@ namespace DodoTdd.Test
         public void InvalidOperationIsThrown_WhenLeavingGameWhileNotInGame()
         {
             var player = new Player();
-            var game = new Game();
 
-            Assert.ThrowsException<InvalidOperationException>(() => { player.Leave(game); });
+            Assert.ThrowsException<InvalidOperationException>(() => { player.LeaveGame(); });
         }
 
         [TestMethod]
@@ -54,7 +53,6 @@ namespace DodoTdd.Test
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
             var player = new Player();
-            var casino = new Casino();
             var requestAmount = 42;
             player.BuyFromCasino(requestAmount);
 

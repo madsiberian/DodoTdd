@@ -22,7 +22,7 @@ namespace DodoTdd
             chips = requestAmount;
         }
 
-        public void Leave(Game game)
+        public void LeaveGame()
         {
             if (!InGame)
             {
