@@ -4,8 +4,9 @@ namespace DodoTdd
 {
     public class Player
     {
-        public int chips;
+        public int Chips;
         public bool InGame { get; set; }
+
 
         public void Join(Game game)
         {
@@ -15,12 +16,13 @@ namespace DodoTdd
             }
 
             InGame = true;
+            _game = game;
             game.AddPlayer(this);
         }
 
         public void BuyFromCasino(int requestAmount, Casino casino)
         {
-            chips = requestAmount;
+            Chips = requestAmount;
             casino.BuyChips(requestAmount);
         }
 
@@ -33,5 +35,12 @@ namespace DodoTdd
 
             InGame = false;
         }
+
+        public void MakeBet(int amount)
+        {
+            _game.AcceptBetFromPlayer(amount, this);
+        }
+
+        Game _game;
     }
 }

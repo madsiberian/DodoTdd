@@ -13,5 +13,9 @@ namespace DodoTdd
         }
 
         int _counter;
+
+        public virtual void AcceptBetFromPlayer(int amount, Player player)
+        {
+        }
     }
 }

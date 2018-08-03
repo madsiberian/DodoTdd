@@ -54,12 +54,23 @@ namespace DodoTdd.Test
         public void CanBuyChips()
         {
             var player = new Player();
-            var casinoMock = new Mock<Casino>();
-            casinoMock.Setup(x => x.BuyChips(It.IsAny<int>()));
+            var casino = new Mock<Casino>();
 
-            player.BuyFromCasino(12, casinoMock.Object);
+            player.BuyFromCasino(12, casino.Object);
 
-            casinoMock.Verify(x => x.BuyChips(It.IsAny<int>()), Times.Once);
+            casino.Verify(x => x.BuyChips(It.IsAny<int>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void CanMakeBetInGame()
+        {
+            var player = new Player();
+            var game = new Mock<Game>();
+            player.Join(game.Object);
+
+            player.MakeBet(12);
+
+            game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Once);
         }
 
         [TestMethod]
@@ -70,7 +81,7 @@ namespace DodoTdd.Test
             var casino = new Casino();
             player.BuyFromCasino(requestAmount, casino);
 
-            Assert.AreEqual(requestAmount, player.chips);
+            Assert.AreEqual(requestAmount, player.Chips);
         }
     }
 }
