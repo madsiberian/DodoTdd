@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodoTdd.Test", "DodoTdd.Test\DodoTdd.Test.csproj", "{F5DA14F9-1BE6-4FDE-8F92-80C8CBA59551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodoTdd", "DodoTdd\DodoTdd.csproj", "{04CB56D2-5E17-48D3-96C8-201DDC3DDB7E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5DA14F9-1BE6-4FDE-8F92-80C8CBA59551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DA14F9-1BE6-4FDE-8F92-80C8CBA59551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5DA14F9-1BE6-4FDE-8F92-80C8CBA59551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5DA14F9-1BE6-4FDE-8F92-80C8CBA59551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04CB56D2-5E17-48D3-96C8-201DDC3DDB7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CB56D2-5E17-48D3-96C8-201DDC3DDB7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CB56D2-5E17-48D3-96C8-201DDC3DDB7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CB56D2-5E17-48D3-96C8-201DDC3DDB7E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E971BA0-0A22-4831-8199-8CF0B461B00F}
+	EndGlobalSection
+EndGlobal
