@@ -38,6 +38,9 @@ namespace DodoTdd
 
         public void MakeBet(int amount)
         {
+            if (Chips < amount)
+                throw new ArgumentException("Not enough chips");
+
             _game.AcceptBetFromPlayer(amount, this);
         }
 

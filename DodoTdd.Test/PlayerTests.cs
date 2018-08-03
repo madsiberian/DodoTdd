@@ -65,12 +65,26 @@ namespace DodoTdd.Test
         public void CanMakeBetInGame()
         {
             var player = new Player();
+            player.BuyFromCasino(12, new Casino());
             var game = new Mock<Game>();
             player.Join(game.Object);
 
             player.MakeBet(12);
 
             game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void ArgumentExceptionIsThrown_WhenBettingMoreChipsThanIsAvailable()
+        {
+            var player = new Player();
+            var casino = new Casino();
+            var amount = 12;
+            player.BuyFromCasino(amount, casino);
+            var game = new Game();
+            player.Join(game);
+
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBet(amount + 1));
         }
 
         [TestMethod]
