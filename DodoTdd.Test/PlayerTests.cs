@@ -69,7 +69,7 @@ namespace DodoTdd.Test
             var game = new Mock<Game>();
             player.Join(game.Object);
 
-            player.MakeBet(12);
+            player.MakeBetOn(12, 1);
 
             game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Once);
         }
@@ -84,7 +84,22 @@ namespace DodoTdd.Test
             var game = new Game();
             player.Join(game);
 
-            Assert.ThrowsException<ArgumentException>(() => player.MakeBet(amount + 1));
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(amount + 1, 1));
+        }
+
+        [TestMethod]
+        public void CanMakeSeveralBets()
+        {
+            var player = new Player();
+            player.BuyFromCasino(12, new Casino());
+            var game = new Mock<Game>();
+            player.Join(game.Object);
+
+            player.MakeBetOn(4, 1);
+            player.MakeBetOn(4, 2);
+            player.MakeBetOn(4, 3);
+
+            game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Exactly(3));
         }
 
         [TestMethod]

@@ -36,7 +36,7 @@ namespace DodoTdd
             InGame = false;
         }
 
-        public void MakeBet(int amount)
+        public void MakeBetOn(int amount, int score)
         {
             if (Chips < amount)
                 throw new ArgumentException("Not enough chips");
