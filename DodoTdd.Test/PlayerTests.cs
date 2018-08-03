@@ -32,6 +32,15 @@ namespace DodoTdd.Test
         }
 
         [TestMethod]
+        public void InvalidOperationIsThrown_WhenLeavingGameWhileNotInGame()
+        {
+            var player = new Player();
+            var game = new Game();
+
+            Assert.ThrowsException<InvalidOperationException>(() => { player.Leave(game); });
+        }
+
+        [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
             var player = new Player();

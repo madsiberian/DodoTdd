@@ -1,4 +1,6 @@
-﻿namespace DodoTdd
+﻿using System;
+
+namespace DodoTdd
 {
     public class Player
     {
@@ -17,6 +19,11 @@
 
         public void Leave(Game game)
         {
+            if (!InGame)
+            {
+                throw new InvalidOperationException("Not in Game");
+            }
+
             InGame = false;
         }
     }
