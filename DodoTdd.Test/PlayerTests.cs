@@ -2,6 +2,7 @@
 using System.Net.Cache;
 using DodoTdd;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DodoTdd.Test
 {
@@ -50,17 +51,26 @@ namespace DodoTdd.Test
         }
 
         [TestMethod]
+        public void CanBuyChips()
+        {
+            var player = new Player();
+            var casinoMock = new Mock<Casino>();
+            casinoMock.Setup(x => x.BuyChips(It.IsAny<int>()));
+
+            player.BuyFromCasino(12, casinoMock.Object);
+
+            casinoMock.Verify(x => x.BuyChips(It.IsAny<int>()), Times.Once);
+        }
+
+        [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
             var player = new Player();
             var requestAmount = 42;
-            player.BuyFromCasino(requestAmount);
+            var casino = new Casino();
+            player.BuyFromCasino(requestAmount, casino);
 
             Assert.AreEqual(requestAmount, player.chips);
         }
-    }
-
-    public class Casino
-    {
     }
 }

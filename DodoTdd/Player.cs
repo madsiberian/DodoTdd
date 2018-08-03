@@ -18,9 +18,10 @@ namespace DodoTdd
             game.AddPlayer(this);
         }
 
-        public void BuyFromCasino(int requestAmount)
+        public void BuyFromCasino(int requestAmount, Casino casino)
         {
             chips = requestAmount;
+            casino.BuyChips(requestAmount);
         }
 
         public void LeaveGame()
