@@ -15,6 +15,7 @@ namespace DodoTdd
             }
 
             InGame = true;
+            game.AddPlayer(this);
         }
 
         public void BuyFromCasino(int requestAmount)
