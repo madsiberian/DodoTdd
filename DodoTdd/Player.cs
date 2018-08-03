@@ -9,6 +9,11 @@ namespace DodoTdd
 
         public void Join(Game game)
         {
+            if (InGame)
+            {
+                throw new InvalidOperationException("Player is already in game");
+            }
+
             InGame = true;
         }
 
@@ -21,7 +26,7 @@ namespace DodoTdd
         {
             if (!InGame)
             {
-                throw new InvalidOperationException("Not in Game");
+                throw new InvalidOperationException("Player is not in game");
             }
 
             InGame = false;

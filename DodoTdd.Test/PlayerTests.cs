@@ -41,6 +41,16 @@ namespace DodoTdd.Test
         }
 
         [TestMethod]
+        public void InvalidOperationIsThrown_WhenJoinGameIfAlreadyInGame()
+        {
+            var player = new Player();
+            var game = new Game();
+            player.Join(game);
+
+            Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Game()); });
+        }
+
+        [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
             var player = new Player();
