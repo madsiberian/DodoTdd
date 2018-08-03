@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Cache;
 using System.Security.Policy;
 using DodoTdd;
@@ -103,7 +104,23 @@ namespace DodoTdd.Test
             game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Exactly(3));
         }
 
-        
+        [TestMethod]
+        public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
+        {
+            var player = new Player();
+            player.BuyFromCasino(100, new Casino());
+            var game = new Mock<Game>();
+            player.Join(game.Object);
+
+            var scores = Enumerable
+                .Range(0, 100)
+                .Where(score => score < 1 || score > 6);
+
+            foreach (var score in scores)
+            {
+                Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, score));
+            }
+        }
 
         [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
@@ -116,36 +133,4 @@ namespace DodoTdd.Test
             Assert.AreEqual(requestAmount, player.Chips);
         }
     }
-
-
-    //class Casino
-    //{
-    //    public Game CreateGame()
-    //    {
-    //        return new Game(this);
-    //    }
-
-    //    public void ValidBet(int amount)
-    //    {
-    //        return true;
-    //    }
-    //}
-
-    //class Game
-    //{
-    //    private Casino _casino;
-
-    //    public virtual void AcceptBetFromPlayer(int amount, Player player)
-    //    {
-    //        _casino.ValidBet(amount);
-    //    }
-    //}
-
-
-    //class Player
-    //{
-
-    //}
-
-
 }
