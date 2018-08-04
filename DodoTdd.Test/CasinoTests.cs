@@ -8,6 +8,9 @@ namespace DodoTdd.Test
     [TestClass]
     public class CasinoTests
     {
+        /// <summary>
+        /// Я, как казино, принимаю только ставки, кратные 5
+        /// </summary>
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenValidatedBetIsNotMultipleOfFive()
         {
@@ -22,6 +25,9 @@ namespace DodoTdd.Test
             }
         }
 
+        /// <summary>
+        /// Я, как казино, получаю фишки, которые проиграл игрок
+        /// </summary>
         [TestMethod]
         public void ChipsCountIncreasedByBet_WhenPlayerLostTheGame()
         {

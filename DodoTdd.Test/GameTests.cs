@@ -6,6 +6,9 @@ namespace DodoTdd.Test
     [TestClass]
     public class GameTests
     {
+        /// <summary>
+        /// Я, как игра, не позволяю войти более чем 6 игрокам
+        /// </summary>
         [TestMethod]
         public void InvalidOperationIsThrown_WhenMoreThanSixPlayersJoin()
         {

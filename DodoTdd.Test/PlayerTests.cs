@@ -8,6 +8,9 @@ namespace DodoTdd.Test
     [TestClass]
     public class PlayerTests
     {
+        /// <summary>
+        /// Я, как игрок, могу войти в игру
+        /// </summary>
         [TestMethod]
         public void InGameIsTrue_WhenJoinedGame()
         {
@@ -19,6 +22,9 @@ namespace DodoTdd.Test
             Assert.IsTrue(player.InGame);
         }
 
+        /// <summary>
+        /// Я, как игрок, могу выйти из игры
+        /// </summary>
         [TestMethod]
         public void InGameIsFalse_WhenLeavedGame()
         {
@@ -36,6 +42,9 @@ namespace DodoTdd.Test
             return new Casino().CreateGame(new Die());
         }
 
+        /// <summary>
+        /// Я, как игрок, не могу выйти из игры, если я в нее не входил
+        /// </summary>
         [TestMethod]
         public void InvalidOperationIsThrown_WhenLeavingGameWhileNotInGame()
         {
@@ -44,6 +53,9 @@ namespace DodoTdd.Test
             Assert.ThrowsException<InvalidOperationException>(() => { player.LeaveGame(); });
         }
 
+        /// <summary>
+        /// Я, как игрок, могу играть только в одну игру одновременно
+        /// </summary>
         [TestMethod]
         public void InvalidOperationIsThrown_WhenJoinGameIfAlreadyInGame()
         {
@@ -54,6 +66,9 @@ namespace DodoTdd.Test
             Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Casino().CreateGame(new Die())); });
         }
 
+        /// <summary>
+        /// Я, как игрок, могу купить фишки у казино, чтобы делать ставки
+        /// </summary>
         [TestMethod]
         public void CanBuyChips()
         {
@@ -65,6 +80,9 @@ namespace DodoTdd.Test
             casino.Verify(x => x.BuyChips(It.IsAny<int>()), Times.Once);
         }
 
+        /// <summary>
+        /// Я, как игрок, могу сделать ставку в игре в кости, чтобы выиграть
+        /// </summary>
         [TestMethod]
         public void CanMakeBetInGame()
         {
@@ -77,6 +95,9 @@ namespace DodoTdd.Test
             game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Once);
         }
 
+        /// <summary>
+        /// Я, как игрок, не могу поставить фишек больше, чем я купил
+        /// </summary>
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingMoreChipsThanIsAvailable()
         {
@@ -90,6 +111,9 @@ namespace DodoTdd.Test
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(amount + 1, 1));
         }
 
+        /// <summary>
+        /// Я, как игрок, могу сделать несколько ставок на разные числа, чтобы повысить вероятность выигрыша
+        /// </summary>
         [TestMethod]
         public void CanMakeSeveralBets()
         {
@@ -104,6 +128,9 @@ namespace DodoTdd.Test
             game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Exactly(3));
         }
 
+        /// <summary>
+        /// Я, как игрок, могу поставить только на числа 1 - 6
+        /// </summary>
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
         {
@@ -126,6 +153,9 @@ namespace DodoTdd.Test
             return new Mock<Game>(new Die(), new Casino());
         }
 
+        /// <summary>
+        /// Я, как игрок, могу проиграть, если сделал неправильную ставку
+        /// </summary>
         [TestMethod]
         public void ChipsCountUnchanged_WhenLostTheGame()
         {
@@ -143,6 +173,9 @@ namespace DodoTdd.Test
             Assert.AreEqual(formerChipsCount, player.Chips);
         }
 
+        /// <summary>
+        /// Я, как игрок, могу выиграть 6 ставок, если сделал правильную ставку
+        /// </summary>
         [TestMethod]
         public void ChipsCountIncreasedBySixTimesBetAmount_WhenWonTheGame()
         {
