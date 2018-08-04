@@ -15,7 +15,7 @@ namespace DodoTdd.Test
         public void InGameIsTrue_WhenJoinedGame()
         {
             var player = new Player();
-            var game = new Game();
+            var game = new Game(new Die());
 
             player.Join(game);
 
@@ -26,7 +26,7 @@ namespace DodoTdd.Test
         public void InGameIsFalse_WhenLeavedGame()
         {
             var player = new Player();
-            var game = new Game();
+            var game = new Game(new Die());
             player.Join(game);
 
             player.LeaveGame();
@@ -46,10 +46,10 @@ namespace DodoTdd.Test
         public void InvalidOperationIsThrown_WhenJoinGameIfAlreadyInGame()
         {
             var player = new Player();
-            var game = new Game();
+            var game = new Game(new Die());
             player.Join(game);
 
-            Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Game()); });
+            Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Game(new Die())); });
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace DodoTdd.Test
         {
             var player = new Player();
             player.BuyFromCasino(12, new Casino());
-            var game = new Mock<Game>();
+            var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
             player.MakeBetOn(12, 1);
@@ -83,7 +83,7 @@ namespace DodoTdd.Test
             var casino = new Casino();
             var amount = 12;
             player.BuyFromCasino(amount, casino);
-            var game = new Game();
+            var game = new Game(new Die());
             player.Join(game);
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(amount + 1, 1));
@@ -94,7 +94,7 @@ namespace DodoTdd.Test
         {
             var player = new Player();
             player.BuyFromCasino(12, new Casino());
-            var game = new Mock<Game>();
+            var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
             player.MakeBetOn(4, 1);
@@ -109,7 +109,7 @@ namespace DodoTdd.Test
         {
             var player = new Player();
             player.BuyFromCasino(100, new Casino());
-            var game = new Mock<Game>();
+            var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
             var scores = Enumerable
@@ -120,6 +120,23 @@ namespace DodoTdd.Test
             {
                 Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, score));
             }
+        }
+
+        [TestMethod]
+        public void ChipsCountUnchanged_WhenLostTheGame()
+        {
+            var player = new Player();
+            player.BuyFromCasino(100, new Casino());
+            var die = new Mock<Die>();
+            die.Setup(x => x.Roll()).Returns(1);
+            var game = new Game(die.Object);
+            player.Join(game);
+            player.MakeBetOn(100, 2);
+            var formerChipsCount = player.Chips;
+
+            game.Run();
+
+            Assert.AreEqual(formerChipsCount, player.Chips);
         }
 
         [TestMethod]

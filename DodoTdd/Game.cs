@@ -14,7 +14,15 @@ namespace DodoTdd
 
         int _counter;
 
+        public Game(Die die)
+        {
+        }
+
         public virtual void AcceptBetFromPlayer(int amount, Player player)
+        {
+        }
+
+        public void Run()
         {
         }
     }
