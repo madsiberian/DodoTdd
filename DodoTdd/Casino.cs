@@ -20,5 +20,23 @@ namespace DodoTdd
         {
             return new Game(die, this, rollCount);
         }
+
+        public static int GetMultiplier(int score, int rollCount)
+        {
+            return (int)Math.Pow(6, rollCount) / CountSumPossibilities(score, rollCount);
+        }
+
+        public static int CountSumPossibilities(int score, int rollCount)
+        {
+            if (rollCount == score)
+                return 1;
+
+            if (rollCount == 0 || score < rollCount)
+                return 0;
+
+            return CountSumPossibilities(score - 1, rollCount) +
+                   CountSumPossibilities(score - 1, rollCount - 1) -
+                   CountSumPossibilities(score - 7, rollCount - 1);
+        }
     }
 }

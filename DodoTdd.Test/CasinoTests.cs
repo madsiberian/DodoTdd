@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -45,6 +46,36 @@ namespace DodoTdd.Test
             game.Run();
 
             Assert.AreEqual(formerChipsCount + chipsAmount, casino.Chips);
+        }
+
+        /// <summary>
+        /// Я, как казино, определяю выигрышный коэффициент по вероятности выпадения того или иного номера
+        /// </summary>
+        [TestMethod]
+        public void WinningMultiplierDependsOnWinningProbability()
+        {
+            var rollCount = 2;
+
+            var multipliers = new Dictionary<int, int>
+            {
+                {  2, 36 },
+                {  3, 18 },
+                {  4, 12 },
+                {  5,  9 },
+                {  6,  7 },
+                {  7,  6 },
+                {  8,  7 },
+                {  9,  9 },
+                { 10, 12 },
+                { 11, 18 },
+                { 12, 36 }
+            };
+
+            foreach (var score in multipliers.Keys)
+            {
+                var multiplier = multipliers[score];
+                Assert.AreEqual(multiplier, Casino.GetMultiplier(score, rollCount));
+            }
         }
     }
 }
