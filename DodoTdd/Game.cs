@@ -5,9 +5,10 @@ namespace DodoTdd
 {
     public class Game
     {
-        public Game(Die die)
+        public Game(Die die, Casino casino)
         {
             _die = die;
+            _casino = casino;
         }
 
         public void AddPlayer(Player player)
@@ -28,15 +29,21 @@ namespace DodoTdd
         {
             var winningScore = _die.Roll();
 
-            if(!_bets.ContainsKey(winningScore))
-                return;
+            foreach (var score in _bets.Keys)
+            {
+                var bet = _bets[score];
+                if (score == winningScore)
+                {
+                    var player = bet.Player;
+                    player.Chips += bet.Amount * 6;
+                    continue;
+                }
 
-            var bet = _bets[winningScore];
-
-            var player = bet.Player;
-            player.Chips += bet.Amount * 6;
+                _casino.Chips += bet.Amount;
+            }
         }
 
+        Casino _casino;
         int _counter;
         Die _die;
         Dictionary<int, Bet> _bets = new Dictionary<int, Bet>();
@@ -49,8 +56,8 @@ namespace DodoTdd
                 Player = player;
             }
 
-            public int Amount { get;  }
-            public Player Player { get;  }
+            public int Amount { get; }
+            public Player Player { get; }
         }
     }
 

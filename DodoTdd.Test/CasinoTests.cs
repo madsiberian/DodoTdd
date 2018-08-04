@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DodoTdd.Test
 {
@@ -19,6 +20,25 @@ namespace DodoTdd.Test
             {
                 Assert.ThrowsException<ArgumentException>(() => casino.ValidateBet(bet));
             }
+        }
+
+        [TestMethod]
+        public void ChipsCountIncreasedByBet_WhenPlayerLostTheGame()
+        {
+            var casino = new Casino();
+            var player = new Player();
+            int chipsAmount = 100;
+            player.BuyFromCasino(chipsAmount, casino);
+            var die = new Mock<Die>();
+            die.Setup(x => x.Roll()).Returns(1);
+            var game = casino.CreateGame(die.Object);
+            player.Join(game);
+            player.MakeBetOn(chipsAmount, 2);
+            var formerChipsCount = casino.Chips;
+
+            game.Run();
+
+            Assert.AreEqual(formerChipsCount + chipsAmount, casino.Chips);
         }
     }
 }

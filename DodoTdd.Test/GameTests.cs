@@ -9,7 +9,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void InvalidOperationIsThrown_WhenMoreThanSixPlayersJoin()
         {
-            var game = new Game(new Die());
+            var game = new Casino().CreateGame(new Die());
             for (int i = 1; i <= 6; ++i)
                 new Player().Join(game);
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Cache;
-using System.Security.Policy;
-using DodoTdd;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -15,7 +12,7 @@ namespace DodoTdd.Test
         public void InGameIsTrue_WhenJoinedGame()
         {
             var player = new Player();
-            var game = new Game(new Die());
+            var game = CreateGame();
 
             player.Join(game);
 
@@ -26,12 +23,17 @@ namespace DodoTdd.Test
         public void InGameIsFalse_WhenLeavedGame()
         {
             var player = new Player();
-            var game = new Game(new Die());
+            var game = CreateGame();
             player.Join(game);
 
             player.LeaveGame();
 
             Assert.IsFalse(player.InGame);
+        }
+
+        private static Game CreateGame()
+        {
+            return new Casino().CreateGame(new Die());
         }
 
         [TestMethod]
@@ -46,10 +48,10 @@ namespace DodoTdd.Test
         public void InvalidOperationIsThrown_WhenJoinGameIfAlreadyInGame()
         {
             var player = new Player();
-            var game = new Game(new Die());
+            var game = CreateGame();
             player.Join(game);
 
-            Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Game(new Die())); });
+            Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Casino().CreateGame(new Die())); });
         }
 
         [TestMethod]
@@ -67,7 +69,7 @@ namespace DodoTdd.Test
         public void CanMakeBetInGame()
         {
             var player = CreatePlayerWithChips(12);
-            var game = new Mock<Game>(new Die());
+            var game = CreateGameMock();
             player.Join(game.Object);
 
             player.MakeBetOn(12, 1);
@@ -82,7 +84,7 @@ namespace DodoTdd.Test
             var casino = new Casino();
             var amount = 12;
             player.BuyFromCasino(amount, casino);
-            var game = new Game(new Die());
+            var game = CreateGame();
             player.Join(game);
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(amount + 1, 1));
@@ -92,7 +94,7 @@ namespace DodoTdd.Test
         public void CanMakeSeveralBets()
         {
             var player = CreatePlayerWithChips(12);
-            var game = new Mock<Game>(new Die());
+            var game = CreateGameMock();
             player.Join(game.Object);
 
             player.MakeBetOn(4, 1);
@@ -106,7 +108,7 @@ namespace DodoTdd.Test
         public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
         {
             var player = CreatePlayerWithChips(100);
-            var game = new Mock<Game>(new Die());
+            var game = CreateGameMock();
             player.Join(game.Object);
 
             var scores = Enumerable
@@ -119,6 +121,11 @@ namespace DodoTdd.Test
             }
         }
 
+        private static Mock<Game> CreateGameMock()
+        {
+            return new Mock<Game>(new Die(), new Casino());
+        }
+
         [TestMethod]
         public void ChipsCountUnchanged_WhenLostTheGame()
         {
@@ -126,7 +133,7 @@ namespace DodoTdd.Test
             var player = CreatePlayerWithChips(chipsAmount);
             var die = new Mock<Die>();
             die.Setup(x => x.Roll()).Returns(1);
-            var game = new Game(die.Object);
+            var game = new Casino().CreateGame(die.Object);
             player.Join(game);
             player.MakeBetOn(chipsAmount, 2);
             var formerChipsCount = player.Chips;
@@ -144,7 +151,7 @@ namespace DodoTdd.Test
             var die = new Mock<Die>();
             var winningScore = 1;
             die.Setup(x => x.Roll()).Returns(winningScore);
-            var game = new Game(die.Object);
+            var game = new Casino().CreateGame(die.Object);
             player.Join(game);
             player.MakeBetOn(chipsAmount, winningScore);
             var formerChipsCount = player.Chips;
