@@ -72,7 +72,7 @@ namespace DodoTdd.Test
 
             player.MakeBetOn(12, 1);
 
-            game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Once);
+            game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Once);
         }
 
         [TestMethod]
@@ -99,7 +99,7 @@ namespace DodoTdd.Test
             player.MakeBetOn(4, 2);
             player.MakeBetOn(4, 3);
 
-            game.Verify(x => x.AcceptBetFromPlayer(It.IsAny<int>(), It.IsAny<Player>()), Times.Exactly(3));
+            game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Exactly(3));
         }
 
         [TestMethod]
@@ -134,6 +134,24 @@ namespace DodoTdd.Test
             game.Run();
 
             Assert.AreEqual(formerChipsCount, player.Chips);
+        }
+
+        [TestMethod]
+        public void ChipsCountIncreasedBySixTimesBetAmount_WhenWonTheGame()
+        {
+            int chipsAmount = 100;
+            var player = CreatePlayerWithChips(chipsAmount);
+            var die = new Mock<Die>();
+            var winningScore = 1;
+            die.Setup(x => x.Roll()).Returns(winningScore);
+            var game = new Game(die.Object);
+            player.Join(game);
+            player.MakeBetOn(chipsAmount, winningScore);
+            var formerChipsCount = player.Chips;
+
+            game.Run();
+
+            Assert.AreEqual(formerChipsCount + chipsAmount * 6, player.Chips);
         }
 
         [TestMethod]

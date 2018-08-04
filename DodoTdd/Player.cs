@@ -44,7 +44,7 @@ namespace DodoTdd
             if (score < 1 || score > 6)
                 throw new ArgumentException("Invalid score");
 
-            _game.AcceptBetFromPlayer(amount, this);
+            _game.AcceptBetFromPlayerOnScore(amount, this, score);
         }
 
         Game _game;
