@@ -16,7 +16,7 @@ namespace DodoTdd
             throw new ArgumentException("Bet is not multiple of five");
         }
 
-        public Game CreateGame(Die die)
+        public Game CreateGame(Die die, int rollCount = 1)
         {
             return new Game(die, this);
         }

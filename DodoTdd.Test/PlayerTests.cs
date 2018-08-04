@@ -148,11 +148,6 @@ namespace DodoTdd.Test
             }
         }
 
-        private static Mock<Game> CreateGameMock()
-        {
-            return new Mock<Game>(new Die(), new Casino());
-        }
-
         /// <summary>
         /// Я, как игрок, могу проиграть, если сделал неправильную ставку
         /// </summary>
@@ -227,11 +222,16 @@ namespace DodoTdd.Test
             Assert.AreEqual(requestAmount, player.Chips);
         }
 
-        private static Player CreatePlayerWithChips(int chipsAmount)
+        static Player CreatePlayerWithChips(int chipsAmount)
         {
             var player = new Player();
             player.BuyFromCasino(chipsAmount, new Casino());
             return player;
+        }
+
+        static Mock<Game> CreateGameMock()
+        {
+            return new Mock<Game>(new Die(), new Casino(), 1);
         }
     }
 }

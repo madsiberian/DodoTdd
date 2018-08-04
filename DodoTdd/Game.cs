@@ -5,11 +5,14 @@ namespace DodoTdd
 {
     public class Game
     {
-        public Game(Die die, Casino casino)
+        public Game(Die die, Casino casino, int rollCount = 1)
         {
             _die = die;
             _casino = casino;
+            RollCount = rollCount;
         }
+
+        public int RollCount { get; }
 
         public void AddPlayer(Player player)
         {
