@@ -194,6 +194,28 @@ namespace DodoTdd.Test
             Assert.AreEqual(formerChipsCount + chipsAmount * 6, player.Chips);
         }
 
+        /// <summary>
+        /// Я, как игрок, могу сделать несколько ставок на разные числа и получить выигрыш по тем, которые выиграли
+        /// </summary>
+        [TestMethod]
+        public void ChipsCountIncreasedBySixTimesWinningBetAmount_WhenOneOfTheBetsWonTheGame()
+        {
+            var player = CreatePlayerWithChips(100);
+            var die = new Mock<Die>();
+            var winningScore = 1;
+            die.Setup(x => x.Roll()).Returns(winningScore);
+            var game = new Casino().CreateGame(die.Object);
+            player.Join(game);
+            player.MakeBetOn(10, 1);
+            player.MakeBetOn(10, 2);
+            player.MakeBetOn(10, 3);
+            var formerChipsCount = player.Chips;
+
+            game.Run();
+
+            Assert.AreEqual(formerChipsCount + 10 * 6, player.Chips);
+        }
+
         [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
