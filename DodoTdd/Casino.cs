@@ -18,7 +18,7 @@ namespace DodoTdd
 
         public Game CreateGame(Die die, int rollCount = 1)
         {
-            return new Game(die, this);
+            return new Game(die, this, rollCount);
         }
     }
 }

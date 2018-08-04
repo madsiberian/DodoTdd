@@ -24,7 +24,7 @@ namespace DodoTdd
 
         public virtual void AcceptBetFromPlayerOnScore(int amount, Player player, int score)
         {
-            if (score < 1 || score > 6)
+            if (score < 1  * RollCount || score > 6 * RollCount)
                 throw new ArgumentException("Invalid score");
 
             var bet = new Bet(amount, player);

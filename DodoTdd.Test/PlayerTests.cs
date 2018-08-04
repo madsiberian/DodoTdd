@@ -206,6 +206,26 @@ namespace DodoTdd.Test
             Assert.AreEqual(formerChipsCount + 10 * 6, player.Chips);
         }
 
+        /// <summary>
+        /// Я, как игрок, могу делать ставки на числа от 2 до 12
+        /// </summary>
+        [TestMethod]
+        public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromTwoToTwelve()
+        {
+            var player = CreatePlayerWithChips(100);
+            var game = CreateTwoDiceGame();
+            player.Join(game);
+
+            var scores = Enumerable
+                .Range(0, 100)
+                .Where(score => score < 2 || score > 12);
+
+            foreach (var score in scores)
+            {
+                Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, score));
+            }
+        }
+
         [TestMethod]
         public void HasRequestedChipsCount_WhenBoughtChipsFromCasino()
         {
@@ -232,6 +252,11 @@ namespace DodoTdd.Test
         static Game CreateGame()
         {
             return new Casino().CreateGame(new Die());
+        }
+
+        static Game CreateTwoDiceGame()
+        {
+            return new Casino().CreateGame(new Die(), 2);
         }
     }
 }
