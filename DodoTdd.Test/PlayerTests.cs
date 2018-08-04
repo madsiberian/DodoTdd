@@ -66,8 +66,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void CanMakeBetInGame()
         {
-            var player = new Player();
-            player.BuyFromCasino(12, new Casino());
+            var player = CreatePlayerWithChips(12);
             var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
@@ -92,8 +91,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void CanMakeSeveralBets()
         {
-            var player = new Player();
-            player.BuyFromCasino(12, new Casino());
+            var player = CreatePlayerWithChips(12);
             var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
@@ -107,8 +105,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
         {
-            var player = new Player();
-            player.BuyFromCasino(100, new Casino());
+            var player = CreatePlayerWithChips(100);
             var game = new Mock<Game>(new Die());
             player.Join(game.Object);
 
@@ -125,13 +122,13 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ChipsCountUnchanged_WhenLostTheGame()
         {
-            var player = new Player();
-            player.BuyFromCasino(100, new Casino());
+            int chipsAmount = 100;
+            var player = CreatePlayerWithChips(chipsAmount);
             var die = new Mock<Die>();
             die.Setup(x => x.Roll()).Returns(1);
             var game = new Game(die.Object);
             player.Join(game);
-            player.MakeBetOn(100, 2);
+            player.MakeBetOn(chipsAmount, 2);
             var formerChipsCount = player.Chips;
 
             game.Run();
@@ -148,6 +145,13 @@ namespace DodoTdd.Test
             player.BuyFromCasino(requestAmount, casino);
 
             Assert.AreEqual(requestAmount, player.Chips);
+        }
+
+        private static Player CreatePlayerWithChips(int chipsAmount)
+        {
+            var player = new Player();
+            player.BuyFromCasino(chipsAmount, new Casino());
+            return player;
         }
     }
 }
