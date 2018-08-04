@@ -37,11 +37,6 @@ namespace DodoTdd.Test
             Assert.IsFalse(player.InGame);
         }
 
-        private static Game CreateGame()
-        {
-            return new Casino().CreateGame(new Die());
-        }
-
         /// <summary>
         /// Я, как игрок, не могу выйти из игры, если я в нее не входил
         /// </summary>
@@ -135,8 +130,8 @@ namespace DodoTdd.Test
         public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
         {
             var player = CreatePlayerWithChips(100);
-            var game = CreateGameMock();
-            player.Join(game.Object);
+            var game = CreateGame();
+            player.Join(game);
 
             var scores = Enumerable
                 .Range(0, 100)
@@ -232,6 +227,11 @@ namespace DodoTdd.Test
         static Mock<Game> CreateGameMock()
         {
             return new Mock<Game>(new Die(), new Casino(), 1);
+        }
+
+        static Game CreateGame()
+        {
+            return new Casino().CreateGame(new Die());
         }
     }
 }

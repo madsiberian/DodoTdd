@@ -24,6 +24,9 @@ namespace DodoTdd
 
         public virtual void AcceptBetFromPlayerOnScore(int amount, Player player, int score)
         {
+            if (score < 1 || score > 6)
+                throw new ArgumentException("Invalid score");
+
             var bet = new Bet(amount, player);
             _bets.Add(score, bet);
         }

@@ -41,9 +41,6 @@ namespace DodoTdd
             if (Chips < amount)
                 throw new ArgumentException("Not enough chips");
 
-            if (score < 1 || score > 6)
-                throw new ArgumentException("Invalid score");
-
             _game.AcceptBetFromPlayerOnScore(amount, this, score);
         }
 
