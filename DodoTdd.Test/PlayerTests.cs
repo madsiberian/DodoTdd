@@ -218,22 +218,32 @@ namespace DodoTdd.Test
 
         /// <summary>
         /// Я, как игрок, могу делать ставки на числа от 2 до 12
+        /// (первый)
         /// </summary>
         [TestMethod]
-        public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromTwoToTwelve()
+        public void ArgumentExceptionIsThrown_WhenBettingScoreIsLowerThanTwoInTwoDiceGame()
         {
             var player = CreatePlayerWithChips(100);
             var game = CreateTwoDiceGame();
             player.Join(game);
+            var invalidScore = 1;
 
-            var scores = Enumerable
-                .Range(0, 100)
-                .Where(score => score < 2 || score > 12);
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
+        }
 
-            foreach (var score in scores)
-            {
-                Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, score));
-            }
+        /// <summary>
+        /// Я, как игрок, могу делать ставки на числа от 2 до 12
+        /// (второй)
+        /// </summary>
+        [TestMethod]
+        public void ArgumentExceptionIsThrown_WhenBettingScoreIsGreaterThanTwelveInTwoDiceGame()
+        {
+            var player = CreatePlayerWithChips(100);
+            var game = CreateTwoDiceGame();
+            player.Join(game);
+            var invalidScore = 13;
+
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
         }
 
         [TestMethod]
