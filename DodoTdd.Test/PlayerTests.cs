@@ -125,22 +125,32 @@ namespace DodoTdd.Test
 
         /// <summary>
         /// Я, как игрок, могу поставить только на числа 1 - 6
+        /// (первый)
         /// </summary>
         [TestMethod]
-        public void ArgumentExceptionIsThrown_WhenBettingScoreNotInRangeFromOneToSix()
+        public void ArgumentExceptionIsThrown_WhenBettingScoreIsLowerThanOneInOneDieGame()
         {
             var player = CreatePlayerWithChips(100);
             var game = CreateGame();
             player.Join(game);
+            var invalidScore = 0;
 
-            var scores = Enumerable
-                .Range(0, 100)
-                .Where(score => score < 1 || score > 6);
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
+        }
 
-            foreach (var score in scores)
-            {
-                Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, score));
-            }
+        /// <summary>
+        /// Я, как игрок, могу поставить только на числа 1 - 6
+        /// (второй)
+        /// </summary>
+        [TestMethod]
+        public void ArgumentExceptionIsThrown_WhenBettingScoreIsGreaterThanSixInOneDieGame()
+        {
+            var player = CreatePlayerWithChips(100);
+            var game = CreateGame();
+            player.Join(game);
+            var invalidScore = 7;
+
+            Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
         }
 
         /// <summary>
