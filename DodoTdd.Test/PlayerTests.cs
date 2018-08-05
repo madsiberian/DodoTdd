@@ -206,14 +206,15 @@ namespace DodoTdd.Test
             die.Setup(x => x.Roll()).Returns(winningScore);
             var game = new Casino().CreateGame(die.Object);
             player.Join(game);
-            player.MakeBetOn(10, 1);
-            player.MakeBetOn(10, 2);
-            player.MakeBetOn(10, 3);
+            var winningAmount = 7;
+            player.MakeBetOn(winningAmount, 1);
+            player.MakeBetOn(11, 2);
+            player.MakeBetOn(13, 3);
             var formerChipsCount = player.Chips;
 
             game.Run();
 
-            Assert.AreEqual(formerChipsCount + 10 * 6, player.Chips);
+            Assert.AreEqual(formerChipsCount + winningAmount * 6, player.Chips);
         }
 
         /// <summary>
