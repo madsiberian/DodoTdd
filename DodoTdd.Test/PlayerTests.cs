@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DodoTdd.Test.DSL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -28,9 +29,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void InGameIsFalse_WhenLeavedGame()
         {
-            var player = new Player();
-            var game = CreateGame();
-            player.Join(game);
+            var player = Create.Player.InSomeGame().Please();
 
             player.LeaveGame();
 
@@ -54,9 +53,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void InvalidOperationIsThrown_WhenJoinGameIfAlreadyInGame()
         {
-            var player = new Player();
-            var game = CreateGame();
-            player.Join(game);
+            var player = Create.Player.InSomeGame().Please();
 
             Assert.ThrowsException<InvalidOperationException>(() => { player.Join(new Casino().CreateGame(new Die())); });
         }
@@ -67,8 +64,8 @@ namespace DodoTdd.Test
         [TestMethod]
         public void CanBuyChips()
         {
-            var player = new Player();
             var casino = new Mock<Casino>();
+            var player = Create.Player.InCasino(casino.Object).Please();
 
             player.BuyFromCasino(12, casino.Object);
 
@@ -81,10 +78,9 @@ namespace DodoTdd.Test
         [TestMethod]
         public void CanMakeBetInGame()
         {
-            var player = CreatePlayerWithChips(12);
             var game = CreateGameMock();
-            player.Join(game.Object);
-
+            var player = Create.Player.InGame(game.Object).WithChips(12).Please();
+           
             player.MakeBetOn(12, 1);
 
             game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Once);
@@ -96,12 +92,8 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingMoreChipsThanIsAvailable()
         {
-            var player = new Player();
-            var casino = new Casino();
             var amount = 12;
-            player.BuyFromCasino(amount, casino);
-            var game = CreateGame();
-            player.Join(game);
+            var player = Create.Player.InSomeGame().WithChips(amount).Please();
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(amount + 1, 1));
         }
@@ -112,9 +104,8 @@ namespace DodoTdd.Test
         [TestMethod]
         public void CanMakeSeveralBets()
         {
-            var player = CreatePlayerWithChips(12);
             var game = CreateGameMock();
-            player.Join(game.Object);
+            var player = Create.Player.WithChips(12).InGame(game.Object).Please();
 
             player.MakeBetOn(4, 1);
             player.MakeBetOn(4, 2);
@@ -130,9 +121,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreIsLowerThanOneInOneDieGame()
         {
-            var player = CreatePlayerWithChips(100);
-            var game = CreateGame();
-            player.Join(game);
+            var player = Create.Player.InSomeGame().WithChips(100).Please();
             var invalidScore = 0;
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
@@ -145,9 +134,7 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreIsGreaterThanSixInOneDieGame()
         {
-            var player = CreatePlayerWithChips(100);
-            var game = CreateGame();
-            player.Join(game);
+            var player = Create.Player.InSomeGame().WithChips(100).Please();
             var invalidScore = 7;
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
@@ -159,12 +146,12 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ChipsCountUnchanged_WhenLostTheGame()
         {
-            int chipsAmount = 100;
-            var player = CreatePlayerWithChips(chipsAmount);
+            var casino = new Casino();
             var die = new Mock<Die>();
             die.Setup(x => x.Roll()).Returns(1);
-            var game = new Casino().CreateGame(die.Object);
-            player.Join(game);
+            var game = casino.CreateGame(die.Object);
+            int chipsAmount = 100;
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Please();
             player.MakeBetOn(chipsAmount, 2);
             var formerChipsCount = player.Chips;
 
@@ -179,13 +166,13 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ChipsCountIncreasedBySixTimesBetAmount_WhenWonTheGame()
         {
-            int chipsAmount = 100;
-            var player = CreatePlayerWithChips(chipsAmount);
+            var casino = new Casino();
             var die = new Mock<Die>();
             var winningScore = 1;
             die.Setup(x => x.Roll()).Returns(winningScore);
-            var game = new Casino().CreateGame(die.Object);
-            player.Join(game);
+            var game = casino.CreateGame(die.Object);
+            int chipsAmount = 100;
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Please();
             player.MakeBetOn(chipsAmount, winningScore);
             var formerChipsCount = player.Chips;
 
@@ -200,12 +187,12 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ChipsCountIncreasedBySixTimesWinningBetAmount_WhenOneOfTheBetsWonTheGame()
         {
-            var player = CreatePlayerWithChips(100);
+            var casino = new Casino();
             var die = new Mock<Die>();
             var winningScore = 1;
             die.Setup(x => x.Roll()).Returns(winningScore);
-            var game = new Casino().CreateGame(die.Object);
-            player.Join(game);
+            var game = casino.CreateGame(die.Object);
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(100).Please();
             var winningAmount = 7;
             player.MakeBetOn(winningAmount, 1);
             player.MakeBetOn(11, 2);
@@ -224,9 +211,9 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreIsLowerThanTwoInTwoDiceGame()
         {
-            var player = CreatePlayerWithChips(100);
-            var game = CreateTwoDiceGame();
-            player.Join(game);
+            var casino = new Casino();
+            var game = casino.CreateGame(new Die(), 2);
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(100).Please();
             var invalidScore = 1;
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
@@ -239,9 +226,9 @@ namespace DodoTdd.Test
         [TestMethod]
         public void ArgumentExceptionIsThrown_WhenBettingScoreIsGreaterThanTwelveInTwoDiceGame()
         {
-            var player = CreatePlayerWithChips(100);
-            var game = CreateTwoDiceGame();
-            player.Join(game);
+            var casino = new Casino();
+            var game = casino.CreateGame(new Die(), 2);
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(100).Please();
             var invalidScore = 13;
 
             Assert.ThrowsException<ArgumentException>(() => player.MakeBetOn(1, invalidScore));
@@ -253,16 +240,10 @@ namespace DodoTdd.Test
             var player = new Player();
             var requestAmount = 42;
             var casino = new Casino();
+
             player.BuyFromCasino(requestAmount, casino);
 
             Assert.AreEqual(requestAmount, player.Chips);
-        }
-
-        static Player CreatePlayerWithChips(int chipsAmount)
-        {
-            var player = new Player();
-            player.BuyFromCasino(chipsAmount, new Casino());
-            return player;
         }
 
         static Mock<Game> CreateGameMock()
@@ -273,11 +254,6 @@ namespace DodoTdd.Test
         static Game CreateGame()
         {
             return new Casino().CreateGame(new Die());
-        }
-
-        static Game CreateTwoDiceGame()
-        {
-            return new Casino().CreateGame(new Die(), 2);
         }
     }
 }
