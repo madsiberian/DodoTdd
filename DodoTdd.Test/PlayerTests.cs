@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DodoTdd.Test.DSL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -105,11 +104,13 @@ namespace DodoTdd.Test
         public void CanMakeSeveralBets()
         {
             var game = CreateGameMock();
-            var player = Create.Player.WithChips(12).InGame(game.Object).Please();
-
-            player.MakeBetOn(4, 1);
-            player.MakeBetOn(4, 2);
-            player.MakeBetOn(4, 3);
+            Create.Player
+                .WithChips(12)
+                .InGame(game.Object)
+                .Betting(4).On(1)
+                .Betting(4).On(2)
+                .Betting(4).On(3)
+                .Please();
 
             game.Verify(x => x.AcceptBetFromPlayerOnScore(It.IsAny<int>(), It.IsAny<Player>(), It.IsAny<int>()), Times.Exactly(3));
         }
@@ -147,12 +148,10 @@ namespace DodoTdd.Test
         public void ChipsCountUnchanged_WhenLostTheGame()
         {
             var casino = new Casino();
-            var die = new Mock<Die>();
-            die.Setup(x => x.Roll()).Returns(1);
-            var game = casino.CreateGame(die.Object);
+            var die = Create.Die.Rolling(1).Please();
+            var game = casino.CreateGame(die);
             int chipsAmount = 100;
-            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Please();
-            player.MakeBetOn(chipsAmount, 2);
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Betting(chipsAmount).On(2).Please();
             var formerChipsCount = player.Chips;
 
             game.Run();
@@ -167,13 +166,11 @@ namespace DodoTdd.Test
         public void ChipsCountIncreasedBySixTimesBetAmount_WhenWonTheGame()
         {
             var casino = new Casino();
-            var die = new Mock<Die>();
             var winningScore = 1;
-            die.Setup(x => x.Roll()).Returns(winningScore);
-            var game = casino.CreateGame(die.Object);
+            var die = Create.Die.Rolling(winningScore).Please();
+            var game = casino.CreateGame(die);
             int chipsAmount = 100;
-            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Please();
-            player.MakeBetOn(chipsAmount, winningScore);
+            var player = Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Betting(chipsAmount).On(winningScore).Please();
             var formerChipsCount = player.Chips;
 
             game.Run();
@@ -188,15 +185,18 @@ namespace DodoTdd.Test
         public void ChipsCountIncreasedBySixTimesWinningBetAmount_WhenOneOfTheBetsWonTheGame()
         {
             var casino = new Casino();
-            var die = new Mock<Die>();
             var winningScore = 1;
-            die.Setup(x => x.Roll()).Returns(winningScore);
-            var game = casino.CreateGame(die.Object);
-            var player = Create.Player.InCasino(casino).InGame(game).WithChips(100).Please();
+            var die = Create.Die.Rolling(winningScore).Please();
+            var game = casino.CreateGame(die);
             var winningAmount = 7;
-            player.MakeBetOn(winningAmount, 1);
-            player.MakeBetOn(11, 2);
-            player.MakeBetOn(13, 3);
+            var player =
+                Create.Player
+                .InCasino(casino).InGame(game)
+                .WithChips(100)
+                .Betting(winningAmount).On(winningScore)
+                .Betting(11).On(2)
+                .Betting(13).On(3)
+                .Please();
             var formerChipsCount = player.Chips;
 
             game.Run();

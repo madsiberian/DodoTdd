@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DodoTdd.Test.DSL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -33,14 +34,10 @@ namespace DodoTdd.Test
         public void ChipsCountIncreasedByBet_WhenPlayerLostTheGame()
         {
             var casino = new Casino();
-            var player = new Player();
             int chipsAmount = 100;
-            player.BuyFromCasino(chipsAmount, casino);
-            var die = new Mock<Die>();
-            die.Setup(x => x.Roll()).Returns(1);
-            var game = casino.CreateGame(die.Object);
-            player.Join(game);
-            player.MakeBetOn(chipsAmount, 2);
+            var die = Create.Die.Rolling(1).Please();
+            var game = casino.CreateGame(die);
+            Create.Player.InCasino(casino).InGame(game).WithChips(chipsAmount).Betting(chipsAmount).On(2).Please();
             var formerChipsCount = casino.Chips;
 
             game.Run();

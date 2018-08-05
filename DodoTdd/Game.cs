@@ -66,6 +66,4 @@ namespace DodoTdd
             public Player Player { get; }
         }
     }
-
-
 }
